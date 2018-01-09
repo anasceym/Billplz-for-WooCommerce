@@ -230,18 +230,24 @@ function wcbillplz_gateway_load()
         {
             global $woocommerce;
             if (version_compare($woocommerce->version, '3.0', "<")) {
+                $billingFirstName = $order->billing_first_name;
+                $billingLastName = $order->billing_last_name;
+
                 $data = array(
-                    'first_name' => (gettype($order->billing_first_name) === 'string' && $order->billing_first_name !== '') ? $order->billing_first_name : $order->shipping_first_name,
-                    'last_name' => (gettype($order->billing_last_name) === 'string' && $order->billing_last_name !== '') ? $order->billing_last_name : $order->shipping_last_name,
+                    'first_name' => !empty($billingFirstName) ? $order->billing_first_name : $order->shipping_first_name,
+                    'last_name' => !empty($billingLastName) ? $order->billing_last_name : $order->shipping_last_name,
                     'email' => $order->billing_email,
                     'phone' => $order->billing_phone,
                     'total' => $order->order_total,
                     'id' => $order->id,
                 );
             } else {
+                $billing_first_name = $order->get_billing_first_name();
+                $billing_last_name = $order->get_billing_last_name();
+
                 $data = array(
-                    'first_name' => !empty($order->get_billing_first_name()) ? $order->get_billing_first_name() : $order->get_shipping_first_name(),
-                    'last_name' => !empty($order->get_billing_last_name()) ? $order->get_billing_last_name() : $order->get_shipping_last_name(),
+                    'first_name' => !empty($billing_first_name) ? $order->get_billing_first_name() : $order->get_shipping_first_name(),
+                    'last_name' => !empty($billing_last_name) ? $order->get_billing_last_name() : $order->get_shipping_last_name(),
                     'email' => $order->get_billing_email(),
                     'phone' => $order->get_billing_phone(),
                     'total' => $order->get_total(),
