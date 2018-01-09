@@ -47,7 +47,7 @@ add_action('plugins_loaded', 'wcbillplz_gateway_load', 0);
 
 /**
  * Load Billplz gateway plugin function
- * 
+ *
  * @return mixed
  */
 function wcbillplz_gateway_load()
@@ -62,7 +62,7 @@ function wcbillplz_gateway_load()
 
     /**
      * Add Billplz gateway to ensure WooCommerce can load it
-     * 
+     *
      * @param array $methods
      * @return array
      */
@@ -74,7 +74,7 @@ function wcbillplz_gateway_load()
 
     /**
      * Define the Billplz gateway
-     * 
+     *
      */
     class WC_Billplz_Gateway extends WC_Payment_Gateway
     {
@@ -95,7 +95,7 @@ function wcbillplz_gateway_load()
 
         /**
          * Construct the Billplz gateway class
-         * 
+         *
          * @global mixed $woocommerce
          */
         public function __construct()
@@ -215,7 +215,7 @@ function wcbillplz_gateway_load()
 
         /**
          * Gateway Settings Form Fields.
-         * 
+         *
          */
         public function init_form_fields()
         {
@@ -223,7 +223,7 @@ function wcbillplz_gateway_load()
         }
 
         /**
-         * 
+         *
          * @return array string
          */
         private static function get_order_data($order)
@@ -231,8 +231,8 @@ function wcbillplz_gateway_load()
             global $woocommerce;
             if (version_compare($woocommerce->version, '3.0', "<")) {
                 $data = array(
-                    'first_name' => !empty($order->billing_first_name) ? $order->billing_first_name : $order->shipping_first_name,
-                    'last_name' => !empty($order->billing_last_name) ? $order->billing_last_name : $order->shipping_last_name,
+                    'first_name' => (gettype($order->billing_first_name) === 'string' && $order->billing_first_name !== '') ? $order->billing_first_name : $order->shipping_first_name,
+                    'last_name' => (gettype($order->billing_last_name) === 'string' && $order->billing_last_name !== '') ? $order->billing_last_name : $order->shipping_last_name,
                     'email' => $order->billing_email,
                     'phone' => $order->billing_phone,
                     'total' => $order->order_total,
@@ -265,7 +265,7 @@ function wcbillplz_gateway_load()
         /**
          * Create bills function
          * Save to database
-         * 
+         *
          * @return string Return URL
          */
         protected function create_bill($order, $order_data)
@@ -370,7 +370,7 @@ function wcbillplz_gateway_load()
             }else {
                 $bills = $this->create_bill($order, $order_data);
             }
-            
+
             /*
              * Save to Database for cleaning later
              */
@@ -486,7 +486,7 @@ function wcbillplz_gateway_load()
 
         /**
          * Adds error message when not configured the app_key.
-         * 
+         *
          */
         public function api_key_missing_message()
         {
@@ -498,7 +498,7 @@ function wcbillplz_gateway_load()
 
         /**
          * Adds error message when not configured the app_secret.
-         * 
+         *
          */
         public function x_signature_missing_message()
         {
